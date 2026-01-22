@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Call Intelligence</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-bg: #fafbfc;
+            --color-surface: #ffffff;
+            --color-border: #e1e4e8;
+            --color-border-hover: #c5c9cd;
+            --color-text-primary: #1a1f36;
+            --color-text-secondary: #697386;
+            --color-text-muted: #9ca3af;
+            --color-primary: #2d3748;
+            --color-primary-hover: #1a202c;
+            --color-accent: #3b82f6;
+            --color-accent-light: #dbeafe;
+            --color-success: #10b981;
+            --color-success-light: #d1fae5;
+            --color-warning: #f59e0b;
+            --color-warning-light: #fef3c7;
+            --color-error: #ef4444;
+            --color-error-light: #fee2e2;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'SF Pro Display', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        .nav {
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--color-text-primary);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--color-primary);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--color-text-primary);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--color-text-primary);
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: var(--color-text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: 4px;
+        }
+
+        .card-description {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* Upload Section */
+        .upload-card {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 64px 32px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: var(--color-bg);
+        }
+
+        .upload-area:hover {
+            border-color: var(--color-border-hover);
+            background: var(--color-surface);
+        }
+
+        .upload-area.dragover {
+            border-color: var(--color-accent);
+            background: var(--color-accent-light);
+        }
+
+        .upload-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 20px;
+            opacity: 0.4;
+        }
+
+        .upload-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: 8px;
+        }
+
+        .upload-description {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .file-name {
+            margin-top: 16px;
+            font-size: 14px;
+            color: var(--color-accent);
+            font-weight: 500;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: var(--radius-sm);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--color-primary-hover);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-text-secondary);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-bg);
+            border-color: var(--color-border-hover);
+        }
+
+        .upload-actions {
+            margin-top: 24px;
+        }
+
+        /* Loading State */
+        .loading-card {
+            max-width: 480px;
+            margin: 0 auto;
+            display: none;
+        }
+
+        .loading-card.active {
+            display: block;
+        }
+
+        .loading-content {
+            text-align: center;
+            padding: 48px 32px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--color-border);
+            border-top-color: var(--color-accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 24px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: 8px;
+        }
+
+        .loading-description {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        /* Results Dashboard */
+        .results-container {
+            display: none;
+        }
+
+        .results-container.active {
+            display: block;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .metric-card {
+            padding: 20px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            transition: box-shadow 0.2s;
+        }
+
+        .metric-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .metric-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .metric-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .metric-icon.primary {
+            background: var(--color-accent-light);
+            color: var(--color-accent);
+        }
+
+        .metric-icon.success {
+            background: var(--color-success-light);
+            color: var(--color-success);
+        }
+
+        .metric-icon.warning {
+            background: var(--color-warning-light);
+            color: var(--color-warning);
+        }
+
+        .metric-icon.info {
+            background: #e0e7ff;
+            color: #6366f1;
+        }
+
+        .metric-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+        }
+
+        .metric-content {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+        }
+
+        .metric-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .metric-list li {
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        .metric-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--color-accent);
+            font-weight: bold;
+        }
+
+        /* Transcript Section */
+        .transcript-section {
+            margin-bottom: 24px;
+        }
+
+        .transcript-box {
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--color-text-secondary);
+        }
+
+        /* Error State */
+        .error-message {
+            display: none;
+            padding: 12px 16px;
+            background: var(--color-error-light);
+            border: 1px solid var(--color-error);
+            border-radius: var(--radius-sm);
+            color: var(--color-error);
+            font-size: 14px;
+            margin-top: 16px;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        /* Success State */
+        .success-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--color-success-light);
+            border: 1px solid var(--color-success);
+            border-radius: var(--radius-sm);
+            color: var(--color-success);
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        .actions-bar {
+            display: flex;
+            justify-content: center;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--color-border);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 28px;
+            }
+
+            .nav {
+                padding: 0 16px;
+            }
+
+            .nav-right {
+                gap: 16px;
+            }
+
+            .container {
+                padding: 32px 16px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-left">
+            <div class="logo">
+                <div class="logo-icon">S</div>
+                <span>Sales Call Intelligence</span>
+            </div>
+        </div>
+        <div class="nav-right">
+            <a href="#" class="nav-link">Docs</a>
+            <a href="#" class="nav-link">About</a>
+            <a href="#" class="nav-link">Sign In</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">AI-Powered Sales Call Analysis</h1>
+            <p class="page-subtitle">Upload your sales call recordings to receive instant coaching insights, performance metrics, and actionable recommendations</p>
+        </div>
+
+        <!-- Upload Section -->
+        <div id="uploadSection">
+            <div class="card upload-card">
+                <div class="card-header">
+                    <h2 class="card-title">Upload Recording</h2>
+                    <p class="card-description">Support for MP3, WAV, M4A, and other audio formats</p>
+                </div>
+                <div class="card-body">
+                    <div class="upload-area" id="uploadArea">
+                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <h3 class="upload-title">Drop your file here, or browse</h3>
+                        <p class="upload-description">Upload a sales call recording to generate AI-powered coaching insights</p>
+                        <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">
+                            Select File
+                        </button>
+                        <input type="file" id="fileInput" class="file-input" accept="audio/*">
+                        <div class="file-name" id="fileName"></div>
+                    </div>
+                    <div class="upload-actions">
+                        <button class="btn btn-primary" id="uploadBtn" onclick="uploadFile()" disabled>
+                            Analyze Recording
+                        </button>
+                    </div>
+                    <div class="error-message" id="errorMsg"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Section -->
+        <div class="card loading-card" id="loadingSection">
+            <div class="loading-content">
+                <div class="spinner"></div>
+                <h3 class="loading-title">Analyzing call with AI models</h3>
+                <p class="loading-description">This typically takes 30-60 seconds</p>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-container" id="resultsSection">
+            <div class="success-indicator">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Analysis complete
+            </div>
+
+            <!-- Transcript -->
+            <div class="transcript-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Call Transcript</h2>
+                        <p class="card-description">Full conversation transcript</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="transcript-box" id="transcript"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Analysis Dashboard</h2>
+                    <p class="card-description">AI-generated insights and coaching recommendations</p>
+                </div>
+                <div class="card-body">
+                    <!-- Top Metrics -->
+                    <div class="dashboard-grid">
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <div class="metric-icon primary">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="metric-title">Call Summary</h3>
+                            </div>
+                            <p class="metric-content" id="callSummary"></p>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <div class="metric-icon info">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                    </svg>
+                                </div>
+                                <h3 class="metric-title">Customer Intent</h3>
+                            </div>
+                            <p class="metric-content" id="customerIntent"></p>
+                        </div>
+                    </div>
+
+                    <!-- Performance Metrics -->
+                    <div class="dashboard-grid">
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <div class="metric-icon primary">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="8.5" cy="7" r="4"></circle>
+                                        <line x1="20" y1="8" x2="20" y2="14"></line>
+                                        <line x1="23" y1="11" x2="17" y2="11"></line>
+                                    </svg>
+                                </div>
+                                <h3 class="metric-title">Rep Performance</h3>
+                            </div>
+                            <p class="metric-content" id="repPerformance"></p>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <div class="metric-icon warning">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                    </svg>
+                                </div>
+                                <h3 class="metric-title">Objections Detected</h3>
+                            </div>
+                            <p class="metric-content" id="objectionAnalysis"></p>
+                        </div>
+                    </div>
+
+                    <!-- Coaching Insights -->
+                    <div class="dashboard-grid">
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <div class="metric-icon success">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </div>
+                                <h3 class="metric-title">What Went Well</h3>
+                            </div>
+                            <ul class="metric-list" id="whatWentWell"></ul>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <div class="metric-icon warning">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                    </svg>
+                                </div>
+                                <h3 class="metric-title">Areas for Improvement</h3>
+                            </div>
+                            <ul class="metric-list" id="whatToImprove"></ul>
+                        </div>
+                    </div>
+
+                    <!-- Next Actions -->
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <div class="metric-icon info">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                            </div>
+                            <h3 class="metric-title">Recommended Next Actions</h3>
+                        </div>
+                        <ul class="metric-list" id="recommendedActions"></ul>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="actions-bar">
+                        <button class="btn btn-primary" onclick="resetApp()">
+                            Analyze Another Call
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = '/transcribe';
+        let selectedFile = null;
+
+        // File input handling
+        const fileInput = document.getElementById('fileInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileName = document.getElementById('fileName');
+        const uploadBtn = document.getElementById('uploadBtn');
+
+        fileInput.addEventListener('change', handleFileSelect);
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                selectedFile = file;
+                fileName.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+                uploadBtn.disabled = false;
+            }
+        }
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('audio/')) {
+                selectedFile = file;
+                fileName.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+                uploadBtn.disabled = false;
+                fileInput.files = e.dataTransfer.files;
+            }
+        });
+
+        // Upload and analyze
+        async function uploadFile() {
+            if (!selectedFile) return;
+
+            const errorMsg = document.getElementById('errorMsg');
+            errorMsg.classList.remove('active');
+
+            document.getElementById('uploadSection').style.display = 'none';
+            document.getElementById('loadingSection').classList.add('active');
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Upload failed');
+                }
+
+                const data = await response.json();
+                displayResults(data.analysis);
+            } catch (error) {
+                errorMsg.textContent = `Error: ${error.message}. Please try again.`;
+                errorMsg.classList.add('active');
+                document.getElementById('uploadSection').style.display = 'block';
+                document.getElementById('loadingSection').classList.remove('active');
+            }
+        }
+
+        function displayResults(analysis) {
+            document.getElementById('loadingSection').classList.remove('active');
+            document.getElementById('resultsSection').classList.add('active');
+
+            // Display transcript
+            document.getElementById('transcript').textContent = analysis.transcript || 'No transcript available';
+
+            // Display metrics
+            document.getElementById('callSummary').textContent = analysis.call_summary || 'N/A';
+            document.getElementById('customerIntent').textContent = analysis.customer_intent || 'N/A';
+            document.getElementById('repPerformance').textContent = analysis.rep_performance || 'N/A';
+            document.getElementById('objectionAnalysis').textContent = analysis.objection_analysis || 'N/A';
+
+            // Display lists
+            displayList('whatWentWell', analysis.what_went_well);
+            displayList('whatToImprove', analysis.what_to_improve);
+            displayList('recommendedActions', analysis.recommended_next_actions);
+        }
+
+        function displayList(elementId, data) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = '';
+
+            if (!data) {
+                element.innerHTML = '<li>No data available</li>';
+                return;
+            }
+
+            const items = typeof data === 'string' ? data.split('\n').filter(Boolean) : 
+                         Array.isArray(data) ? data : [data];
+
+            items.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item.replace(/^[-•*]\s*/, '');
+                element.appendChild(li);
+            });
+        }
+
+        function resetApp() {
+            selectedFile = null;
+            fileInput.value = '';
+            fileName.textContent = '';
+            uploadBtn.disabled = true;
+            document.getElementById('uploadSection').style.display = 'block';
+            document.getElementById('resultsSection').classList.remove('active');
+        }
+    </script>
+</body>
+</html>

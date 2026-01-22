@@ -1,0 +1,14 @@
+boto3
+fastapi
+uvicorn
+requests
+python-multipart
+langchain-core
+langchain-text-splitters
+langchain-pinecone
+langgraph
+pydantic
+python-dotenv
+python-docx
+langchain_openai
+pinecone-client
