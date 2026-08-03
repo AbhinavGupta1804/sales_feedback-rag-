@@ -1,6 +1,6 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse                     #Lets your API return HTML instead of JSON
 from graph.graph import final_graph
 import boto3, uuid
 
@@ -20,7 +20,7 @@ s3 = boto3.client("s3", region_name="us-east-1")
 
 BUCKET = "sales-audio-us"
 
-# ✅ Root endpoint - HTML file serve karega
+# ✅ Root endpoint - HTML file serve karega 
 @app.get("/", response_class=HTMLResponse)
 async def root():
     with open("index2.html", "r", encoding="utf-8") as f:
@@ -34,10 +34,10 @@ async def upload_and_transcribe(file: UploadFile = File(...)):
         s3.upload_fileobj(
             file.file,
             BUCKET,
-            key
+            key           #Path inside the bucket
         )
 
-        s3_uri = f"s3://{BUCKET}/{key}"
+        s3_uri = f"s3://{BUCKET}/{key}"         #AWS Transcribe needs this format to find the audio file
 
         transcript = transcribe_audio(
             s3_uri=s3_uri,

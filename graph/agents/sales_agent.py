@@ -25,7 +25,7 @@ def sales_analyzer_agent(state):
 
     ### KNOWLEDGE CATEGORIES:
     - FOR 'WHAT WENT WELL': Use these Tone & Empathy rules: {well_ctx}
-    - FOR 'WHAT TO IMPROVE': Use these Discovery & Objection rules: {improve_ctx} 
+    - FOR 'WHAT TO IMPROVE': Use these Discovery : {improve_ctx} 
     - FOR 'RECOMMENDED NEXT ACTIONS': Use these Closing & Follow-up rules: {action_ctx} {followup_ctx}
 
     ### TRANSCRIPT:

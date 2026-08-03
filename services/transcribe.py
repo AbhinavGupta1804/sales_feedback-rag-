@@ -19,7 +19,7 @@ def transcribe_audio(s3_uri: str, media_format="mp3"):  #s3_uri- location of aud
 
         status = job["TranscriptionJobStatus"]
         if status == "COMPLETED":
-            url = job["Transcript"]["TranscriptFileUri"]
+            url = job["Transcript"]["TranscriptFileUri"] #AWS gives you a temporary URL where the transcript JSON file is stored
             break
         if status == "FAILED":
             raise Exception("Transcription failed")
